@@ -187,7 +187,7 @@ namespace WPFLocalizeExtension.Engine
             {
                 var dp = enumerator.Current.Property;
                 var be = BindingOperations.GetBindingExpression(obj, dp);
-                if (be != null && be.ParentBinding != null && be.ParentBinding.Path != null)
+                if (be?.ParentBinding?.Path != null)
                     BindingOperations.SetBinding(result, dp, be.ParentBinding);
             }
 
@@ -198,7 +198,6 @@ namespace WPFLocalizeExtension.Engine
         {
             // Re-arrange the children:
             theTextBlock.Inlines.Clear();
-
             if (FormatString != null)
             {
                 var matchedUpToIndex = 0;
@@ -209,7 +208,6 @@ namespace WPFLocalizeExtension.Engine
                 if (Gaps != null)
                 {
                     var match = Regex.Match(FormatString, RegexPattern);
-
                     while (match.Success)
                     {
                         // Handle match here...
@@ -258,7 +256,7 @@ namespace WPFLocalizeExtension.Engine
 
                 // add the remaining part:
                 theTextBlock.Inlines.Add(string.Format(FormatString.Substring(matchedUpToIndex), Gaps));
-                
+
                 InvalidateVisual();
             }
             else

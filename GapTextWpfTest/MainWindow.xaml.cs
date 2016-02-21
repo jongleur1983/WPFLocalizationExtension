@@ -70,7 +70,7 @@
                 if (closingTime != value)
                 {
                     closingTime = value;
-                    RaisePropertyChanged("ClosingTime");
+                    RaisePropertyChanged(nameof(ClosingTime));
                 }
             }
         }
@@ -87,7 +87,7 @@
                 if (city != value)
                 {
                     city = value;
-                    RaisePropertyChanged("City");
+                    RaisePropertyChanged(nameof(City));
                 }
             }
         }
