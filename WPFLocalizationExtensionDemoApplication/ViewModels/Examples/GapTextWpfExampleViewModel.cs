@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-
-namespace WPFLocalizationExtensionDemoApplication.ViewModels.Examples
+﻿namespace WPFLocalizationExtensionDemoApplication.ViewModels.Examples
 {
+    using System;
+    using System.Linq;
+    using Caliburn.Micro;
+
     public class GapTextWpfExampleViewModel : Screen
     {
         private string _city;
@@ -21,16 +18,16 @@ namespace WPFLocalizationExtensionDemoApplication.ViewModels.Examples
             this.City = "Berlin";
             this.WeekDay = DayOfWeek.Monday;
 
-            this.Animals = new BindableCollection<Animal>();
+            var million = 1000 * 1000;
 
-            this.Animals.Add(new Animal("Dodo", DateTime.Now.Year - 1681, 1681));
-
-            var million = 1000*1000;
-
-            this.Animals.Add(new Animal("Stegosaurus", 195*million));
-            this.Animals.Add(new Animal("Triceratops", 66*million));
-            this.Animals.Add(new Animal("Diplodocus", 147*million));
-            this.Animals.Add(new Animal("Apatosaurus", 145*million));
+            this.Animals = new BindableCollection<Animal>
+            {
+                new Animal("Dodo", DateTime.Now.Year - 1681, 1681),
+                new Animal("Stegosaurus", 195 * million),
+                new Animal("Triceratops", 66 * million),
+                new Animal("Diplodocus", 147 * million),
+                new Animal("Apatosaurus", 145 * million)
+            };
 
             this.SelectedAnimal = this.Animals.First();
 
@@ -42,9 +39,11 @@ namespace WPFLocalizationExtensionDemoApplication.ViewModels.Examples
             get { return _city; }
             set
             {
-                if (value == _city) return;
-                _city = value;
-                NotifyOfPropertyChange(() => City);
+                if (value != _city)
+                {
+                    _city = value;
+                    NotifyOfPropertyChange(() => City);
+                }
             }
         }
 
@@ -53,9 +52,11 @@ namespace WPFLocalizationExtensionDemoApplication.ViewModels.Examples
             get { return _weekDay; }
             set
             {
-                if (value == _weekDay) return;
-                _weekDay = value;
-                NotifyOfPropertyChange(() => WeekDay);
+                if (value != _weekDay)
+                {
+                    _weekDay = value;
+                    NotifyOfPropertyChange(() => WeekDay);
+                }
             }
         }
 
