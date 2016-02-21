@@ -7,8 +7,9 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:converters="clr-namespace:GapTextWpfTest.Converters"
         xmlns:localLex ="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="200"
+        Title="MainWindow" Height="350" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Window.Resources>
         <converters:ObjectTypeEqualsConverter x:Key="TypeEqualsConverter" />
@@ -18,7 +19,7 @@
         <Label Background="Red" Content="static WrapPanel" />
         <WrapPanel Grid.Row="0">
             <TextBlock Text="Dies ist ein " />
-            <TextBox />
+            <TextBox MinWidth="100" />
             <TextBlock Text=". " />
             <DatePicker Text="" />
             <TextBlock Text=" ist ein Datum." />
