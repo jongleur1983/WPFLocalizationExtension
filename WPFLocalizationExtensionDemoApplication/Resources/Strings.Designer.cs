@@ -61,6 +61,69 @@ namespace WPFLocalizationExtensionDemoApplication.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Friday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Friday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Monday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Monday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Saturday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Saturday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Saturday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sunday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Sunday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Thursday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Thursday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Tuesday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Tuesday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Wednesday ähnelt.
+        /// </summary>
+        internal static string DayOfWeek_Wednesday {
+            get {
+                return ResourceManager.GetString("DayOfWeek_Wednesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die The shop in {0} is open on {1} from {2} to {3}, that&apos;s on {4} ähnelt.
         /// </summary>
         internal static string Examples_A_ShopInCityOpenWithReprise {

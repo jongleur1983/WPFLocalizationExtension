@@ -121,4 +121,25 @@
   <data name="Examples.D.TestWithReorderedControls" xml:space="preserve">
     <value>Vor {0} Jahren lebte {1}.</value>
   </data>
+  <data name="DayOfWeek_Monday" xml:space="preserve">
+    <value>Montag</value>
+  </data>
+  <data name="DayOfWeek_Tuesday" xml:space="preserve">
+    <value>Dienstag</value>
+  </data>
+  <data name="DayOfWeek_Wednesday" xml:space="preserve">
+    <value>Mittwoch</value>
+  </data>
+  <data name="DayOfWeek_Thursday" xml:space="preserve">
+    <value>Donnerstag</value>
+  </data>
+  <data name="DayOfWeek_Friday" xml:space="preserve">
+    <value>Freitag</value>
+  </data>
+  <data name="DayOfWeek_Saturday" xml:space="preserve">
+    <value>Samstag</value>
+  </data>
+  <data name="DayOfWeek_Sunday" xml:space="preserve">
+    <value>Sonntag</value>
+  </data>
 </root>
