@@ -60,6 +60,14 @@
             }
         }
 
+        public BindableCollection<DayOfWeek> WeekDays
+        {
+            get
+            {
+                return new BindableCollection<DayOfWeek>(Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>());
+            }
+        }
+
         public DateTime OpeningTime
         {
             get { return _openingTime; }

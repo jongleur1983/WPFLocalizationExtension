@@ -15,12 +15,18 @@
              d:DataContext="{d:DesignInstance {x:Type examples:GapTextWpfExampleViewModel}}"
              d:DesignHeight="400" 
              d:DesignWidth="300">
+    <UserControl.Resources>
+        <!--<extensions:ResxLocalizationProvider x:Key="CSVProvider" FileName="Example" HasHeader="True" />-->
+    </UserControl.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <Label Content="{extensions:Loc Key=Examples.GapTextWpfExample.CityLabel}" />
             <TextBox Text="{Binding City}" />
         </StackPanel>
-        
+        <lex:EnumComboBox Type="{x:Type system:DayOfWeek}" 
+                          PrependType="True"
+                          SelectedItem="{Binding WeekDay}" />
+
         <GroupBox Header="{extensions:LocText Key=Examples.GapTextWpfExample.Example, FormatSegment1=A}">
             <lex:GapTextControl FormatString="{extensions:Loc Key=Examples.A.ShopInCityOpenWithReprise}">
                 <lex:GapTextControl.Template>
@@ -29,11 +35,21 @@
                     </ControlTemplate>
                 </lex:GapTextControl.Template>
                 <lex:GapTextControl.Gaps>
-                    <Run Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.City}" />
-                    <lex:EnumComboBox Type="{x:Type system:DayOfWeek}" SelectedItem="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.WeekDay}" />
-                    <DatePicker SelectedDate="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.OpeningTime}" />
-                    <DatePicker SelectedDate="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.ClosingTime}" />
-                    <Run Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.WeekDay}" />
+                    <!--<Run Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.City}" />-->
+                    <Run Text="{Binding City}" />
+                    <!-- TODO: this is a problem here -->
+                    <!--<Run Text="{Binding WeekDay}" />-->
+                    <!--<lex:EnumComboBox Type="{x:Type system:DayOfWeek}" 
+                                      PrependType="True"
+                                      SelectedItem="{Binding WeekDay}" />-->
+                    <ComboBox SelectedItem="{Binding WeekDay}"
+                              ItemsSource="{Binding WeekDays}" />
+                    <!-- TODO: end of the problem -->
+                    <DatePicker SelectedDate="{Binding OpeningTime}" />
+                    <DatePicker SelectedDate="{Binding ClosingTime}" />
+                    <lex:EnumRun PrependType="True" 
+                                 Text="{Binding WeekDay}" />
+                    <!--<Run Text="{Binding WeekDay}" />-->
                 </lex:GapTextControl.Gaps>
             </lex:GapTextControl>
         </GroupBox>
@@ -75,9 +91,9 @@
                     </ControlTemplate>
                 </lex:GapTextControl.Template>
                 <lex:GapTextControl.Gaps>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.SelectedAnimal.Age}" />
-                    <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.Animals}" 
-                              SelectedItem="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.SelectedAnimal}"
+                    <TextBlock Text="{Binding SelectedAnimal.Age}" />
+                    <ComboBox ItemsSource="{Binding Animals}" 
+                              SelectedItem="{Binding SelectedAnimal}"
                               DisplayMemberPath="Name"/>
                 </lex:GapTextControl.Gaps>
             </lex:GapTextControl>
@@ -94,8 +110,8 @@
                     </ControlTemplate>
                 </lex:GapTextControl.Template>
                 <lex:GapTextControl.Gaps>
-                    <Run Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.SelectedAnimal.Name}" />
-                    <TextBox IsEnabled="False" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=lex:GapTextControl}, Path=DataContext.SelectedAnimal.LastSeen}" />
+                    <Run Text="{Binding SelectedAnimal.Name}" />
+                    <TextBox IsEnabled="False" Text="{Binding SelectedAnimal.LastSeen}" />
                 </lex:GapTextControl.Gaps>
             </lex:GapTextControl>
         </GroupBox>

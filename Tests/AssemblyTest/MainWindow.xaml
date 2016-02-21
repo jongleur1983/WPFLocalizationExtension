@@ -116,11 +116,11 @@
             </TextBox.Text>
         </TextBox>-->
         <lex:EnumComboBox Grid.Row="6" Margin="2" PrependType="True" lex:LocalizeDictionary.Provider="{StaticResource ResourceKey=CSVProvider}" Type="{x:Type Local:TestEnum}">
-            <!--<lex:EnumComboBox.ItemTemplate>
+            <lex:EnumComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock><lex:EnumRun EnumValue="{Binding}" PrependType="{Binding PrependType, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=lex:EnumComboBox}}" /></TextBlock>
                 </DataTemplate>
-            </lex:EnumComboBox.ItemTemplate>-->
+            </lex:EnumComboBox.ItemTemplate>
             <!--<lex:EnumComboBox.Style>
                 <Style TargetType="{x:Type lex:EnumComboBox}">
                     <Setter Property="ItemTemplate">
