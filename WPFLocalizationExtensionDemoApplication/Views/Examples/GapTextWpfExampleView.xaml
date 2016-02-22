@@ -39,11 +39,11 @@
                     <Run Text="{Binding City}" />
                     <!-- TODO: this is a problem here -->
                     <!--<Run Text="{Binding WeekDay}" />-->
-                    <!--<lex:EnumComboBox Type="{x:Type system:DayOfWeek}" 
+                    <lex:EnumComboBox Type="{x:Type system:DayOfWeek}" 
                                       PrependType="True"
-                                      SelectedItem="{Binding WeekDay}" />-->
-                    <ComboBox SelectedItem="{Binding WeekDay}"
-                              ItemsSource="{Binding WeekDays}" />
+                                      SelectedItem="{Binding WeekDay}" />
+                    <!--<ComboBox SelectedItem="{Binding WeekDay}"
+                              ItemsSource="{Binding WeekDays}" />-->
                     <!-- TODO: end of the problem -->
                     <DatePicker SelectedDate="{Binding OpeningTime}" />
                     <DatePicker SelectedDate="{Binding ClosingTime}" />

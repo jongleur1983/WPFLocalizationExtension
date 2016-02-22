@@ -7,6 +7,9 @@
 // <author>Uwe Mayer</author>
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace WPFLocalizeExtension.Engine
 {
     using System;
@@ -27,6 +30,31 @@ namespace WPFLocalizeExtension.Engine
     [TemplatePart(Name = PART_TextBlock, Type = typeof(TextBlock))]
     public class GapTextControl : Control
     {
+        public enum ReplacementStrategy
+        {
+            /// <summary>
+            /// Do not replace any gap when it's duplicated
+            /// </summary>
+            ReplaceNothingOnDuplicates,
+            /// <summary>
+            /// Always replace only the first item
+            /// </summary>
+            ReplaceFirst,
+            /// <summary>
+            /// Try to replace any gap. Throw an Exception on failure.
+            /// </summary>
+            ReplaceAllOrThrowException,
+            /// <summary>
+            /// Replace all. If it fails on subsequent replacements, keep the first replacement, 
+            /// but use <see cref="ReplaceNothingOnDuplicates"/> for those.
+            /// </summary>
+            ReplaceAllOrFirst,
+            /// <summary>
+            /// Throw exception whenever the same FrameworkElement is replaced more than once.
+            /// </summary>
+            ThrowExecption
+        }
+
         #region Dependency Properties
         /// <summary>
         /// This property is the string that may contain gaps for controls.
@@ -55,20 +83,11 @@ namespace WPFLocalizeExtension.Engine
         /// <summary>
         /// If this property is true, any FormatString that refers to the same string item multiple times produces an exception.
         /// </summary>
-        public static readonly DependencyProperty IgnoreDuplicateStringReferencesProperty = DependencyProperty.Register(
-            nameof(IgnoreDuplicateStringReferences),
-            typeof(bool),
+        public static readonly DependencyProperty DuplicateReplacementStrategyProperty = DependencyProperty.Register(
+            nameof(DuplicateReplacementStrategy),
+            typeof(ReplacementStrategy),
             typeof(GapTextControl),
-            new PropertyMetadata(true));
-
-        /// <summary>
-        /// If this property is true, any FormatString that refers to the same control item multiple times produces an exception.
-        /// </summary>
-        public static readonly DependencyProperty IgnoreDuplicateControlReferencesProperty = DependencyProperty.Register(
-            nameof(IgnoreDuplicateControlReferences),
-            typeof(bool),
-            typeof(GapTextControl),
-            new PropertyMetadata(false));
+            new PropertyMetadata(ReplacementStrategy.ReplaceAllOrThrowException));
 
         /// <summary>
         /// property that stores the items to be inserted into the gaps.
@@ -126,16 +145,10 @@ namespace WPFLocalizeExtension.Engine
             set { SetValue(IgnoreLessGapsProperty, value); }
         }
 
-        public bool IgnoreDuplicateStringReferences
+        public ReplacementStrategy DuplicateReplacementStrategy
         {
-            get { return (bool)GetValue(IgnoreDuplicateStringReferencesProperty); }
-            set { SetValue(IgnoreDuplicateStringReferencesProperty, value); }
-        }
-
-        public bool IgnoreDuplicateControlReferences
-        {
-            get { return (bool)GetValue(IgnoreDuplicateControlReferencesProperty); }
-            set { SetValue(IgnoreDuplicateControlReferencesProperty, value); }
+            get { return (ReplacementStrategy)GetValue(DuplicateReplacementStrategyProperty); }
+            set { SetValue(DuplicateReplacementStrategyProperty, value); }
         }
 
         /// <summary>
@@ -198,24 +211,36 @@ namespace WPFLocalizeExtension.Engine
         {
             // Re-arrange the children:
             theTextBlock.Inlines.Clear();
+            
             if (FormatString != null)
             {
                 var matchedUpToIndex = 0;
+
+                // store in a hashSet which gaps have been replaced already:
+                var usedGaps = new HashSet<int>();
 
                 // 1) determine which items are to be used as string and which are to be inserted as controls:
                 // allowed according to https://msdn.microsoft.com/de-de/library/system.windows.documents.inlinecollection%28v=vs.110%29.aspx are
                 // Inline, String (creates an implicit Run), UIElement (creates an implicit InlineUIContainer with the supplied UIElement inside), 
                 if (Gaps != null)
                 {
+                    // get a set of indices that should not be replaced anywhere, used especially where nothing should be replaced on duplicates:
+                    var indicesNotToReplace = DuplicateReplacementStrategy == ReplacementStrategy.ReplaceNothingOnDuplicates
+                        ? GetDuplicateReplacements()
+                        : new int[0];
+
                     var match = Regex.Match(FormatString, RegexPattern);
                     while (match.Success)
                     {
                         // Handle match here...
                         var wholeMatch = match.Groups[0].Value; // contains string and simple placeholder at the end.
+
+                        // has still to be formatted as it may contain placeholders with format specifiers that are not found by the patteern.
+                        // TODO or even better bound accordingly by lex:loc binding
                         var formatStringPartial = match.Groups[1].Value;
-                        // has still to be formatted TODO or even better bound accordingly by lex:loc binding
-                        var itemIndex = int.Parse(match.Groups[2].Value);
+                        
                         // it's secure to parse an int here as this follows from the regex.
+                        var itemIndex = int.Parse(match.Groups[2].Value);
 
                         matchedUpToIndex += wholeMatch.Length;
 
@@ -229,27 +254,52 @@ namespace WPFLocalizeExtension.Engine
                         // Check availability of a classified gap.
                         if (Gaps.Count <= itemIndex)
                             continue;
+                        // check if this index should be replaced at all:
+                        if (indicesNotToReplace.Contains(itemIndex))
+                            continue;
+
                         var gap = Gaps[itemIndex];
 
                         // 2) the item encoded in the placeholder:
-                        try
+                        // apply the substitution depending on the settings:
+                        switch (DuplicateReplacementStrategy)
                         {
-                            if (gap is UIElement)
-                            {
-                                var item = DeepCopy((UIElement)gap);
-                                theTextBlock.Inlines.Add(item);
-                            }
-                            else if (gap is Inline)
-                            {
-                                var item = DeepCopy((Inline)gap);
-                                theTextBlock.Inlines.Add(item);
-                            }
-                            else if (gap != null)
-                                theTextBlock.Inlines.Add(gap.ToString());
-                        }
-                        catch (Exception e)
-                        {
-                            // break for now
+                            case ReplacementStrategy.ReplaceAllOrFirst:
+                                try
+                                {
+                                    ReplaceGap(gap);
+                                }
+                                catch (Exception)
+                                {
+                                    if (usedGaps.Add(itemIndex))
+                                    {
+                                        // first replacement failed, so we throw the exception:
+                                        throw;
+                                    }
+                                    // else it's a repeated replacement and we don't care.
+                                }
+                                break;
+                            case ReplacementStrategy.ReplaceAllOrThrowException:
+                                // don't try and catch exceptions, as  we throw an exception in any case, especially when they are due to duplicate gaps.
+                                ReplaceGap(gap);
+                                break;
+                            case ReplacementStrategy.ReplaceFirst:
+                                // only replace if we didn't before:
+                                if (!usedGaps.Add(itemIndex))
+                                {
+                                    ReplaceGap(gap);
+                                }
+                                break;
+                            case ReplacementStrategy.ReplaceNothingOnDuplicates:
+                                // has been checked beforehand!
+                                break;
+                            case ReplacementStrategy.ThrowExecption:
+                                if (!usedGaps.Add(itemIndex))
+                                {
+                                    throw new InvalidOperationException(
+                                        $"ReplacementStrategy {ReplacementStrategy.ThrowExecption} forbids to use the same element twice.");
+                                }
+                                break;
                         }
                     }
                 }
@@ -264,6 +314,42 @@ namespace WPFLocalizeExtension.Engine
                 throw new Exception("FormatString is not a string!");
             }
         }
+
+        private int[] GetDuplicateReplacements()
+        {
+            var allReplacements = new List<int>();
+            var match = Regex.Match(FormatString, RegexPattern);
+
+            while (match.Success)
+            {
+                allReplacements.Add(int.Parse(match.Groups[2].Value));
+                match.NextMatch();
+            }
+
+            // group by number, take only those where after taking one out any other is left:
+            return allReplacements
+                .GroupBy(i => i)
+                .Where(group => group.Skip(1).Any())
+                .Select(group => group.Key)
+                .ToArray();
+        }
+
+        private void ReplaceGap(object gap)
+        {
+            if (gap is UIElement)
+            {
+                var uiElementItem = DeepCopy((UIElement)gap);
+                theTextBlock.Inlines.Add(uiElementItem);
+            }
+            else if (gap is Inline)
+            {
+                var inlineItem = DeepCopy((Inline)gap);
+                theTextBlock.Inlines.Add(inlineItem);
+            }
+            else if (gap != null)
+                theTextBlock.Inlines.Add(gap.ToString());
+        }
+
         #endregion
 
         #region Template stuff
@@ -281,6 +367,8 @@ namespace WPFLocalizeExtension.Engine
             if (Template != null)
             {
                 var textBlock = Template.FindName(PART_TextBlock, this) as TextBlock;
+                
+                // ReSharper disable once PossibleUnintendedReferenceComparison
                 if (textBlock != theTextBlock)
                 {
                     theTextBlock = textBlock;
