@@ -26,7 +26,7 @@ namespace WPFLocalizeExtension.Engine
     /// <summary>
     /// A gap text control.
     /// </summary>
-    //TODO: proper handling of \n in string contents
+    // TODO: proper handling of \n in string contents
     [TemplatePart(Name = PART_TextBlock, Type = typeof(TextBlock))]
     public class GapTextControl : Control
     {
@@ -260,9 +260,18 @@ namespace WPFLocalizeExtension.Engine
 
                         var gap = Gaps[itemIndex];
 
+                        // get ReplacementStrategy for the gap to be replaced next:
+                        var customReplacementStrategy = DuplicateReplacementStrategy;
+
+                        var dependencyGap = gap as DependencyObject;
+                        if (dependencyGap != null)
+                        {
+                            customReplacementStrategy = Gap.GetReplacementStrategy(dependencyGap) ?? DuplicateReplacementStrategy;
+                        }
+
                         // 2) the item encoded in the placeholder:
                         // apply the substitution depending on the settings:
-                        switch (DuplicateReplacementStrategy)
+                        switch (customReplacementStrategy)
                         {
                             case ReplacementStrategy.ReplaceAllOrFirst:
                                 try

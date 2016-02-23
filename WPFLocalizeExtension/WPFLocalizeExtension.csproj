@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="Engine\EnumComboBox.cs" />
     <Compile Include="Engine\EnumRun.cs" />
+    <Compile Include="Engine\Gap.cs" />
     <Compile Include="Engine\GapTextControl.cs" />
     <Compile Include="Engine\ParentNotifiers.cs" />
     <Compile Include="Engine\TypedWeakReference.cs" />

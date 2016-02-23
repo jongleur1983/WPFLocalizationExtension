@@ -65,8 +65,9 @@
 
         <GroupBox Header="{extensions:LocText Key=Examples.GapTextWpfExample.Example, FormatSegment1=C}">
             <lex:GapTextControl FormatString="{extensions:Loc Key=Examples.C.TestWithPlaceholder}"
-                                 HorizontalAlignment="Stretch"
-                                 MinHeight="100">
+                                HorizontalAlignment="Stretch"
+                                
+                                MinHeight="100">
                 <lex:GapTextControl.Template>
                     <ControlTemplate>
                         <Border BorderBrush="Red">
