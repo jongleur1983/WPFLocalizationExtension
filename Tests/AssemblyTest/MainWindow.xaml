@@ -80,6 +80,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ComboBox ItemsSource="{Binding Source={x:Static lex:LocalizeDictionary.Instance}, Path=MergedAvailableCultures}"
                   SelectedItem="{Binding Source={x:Static lex:LocalizeDictionary.Instance}, Path=Culture}"
@@ -107,6 +108,39 @@
         <TextBlock Grid.Row="5" Text="{Binding ElementName=Proxy, Path=Result}">
             <lex:EnumRun PrependType="True" EnumValue="{Binding EnumValue}" />
         </TextBlock>
+        <Button Grid.Row="6"
+                HorizontalAlignment="Stretch"
+                Height="32">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EnumValue}"
+                                     Value="{x:Static Local:TestEnum.Input}">
+                            <Setter Property="Content"
+                                    Value="{lex:Loc ButtonCaptionOnInput}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding EnumValue}"
+                                     Value="{x:Static Local:TestEnum.Output}">
+                            <Setter Property="Content"
+                                    Value="{lex:Loc ButtonCaptionOnOutput}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding EnumValue}"
+                                     Value="{x:Static Local:TestEnum.Processing}">
+                            <Setter Property="Content"
+                                    Value="{lex:Loc ButtonCaptionOnProcessing}" />
+                            <Setter Property="IsEnabled"
+                                    Value="False" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding EnumValue}"
+                                     Value="{x:Static Local:TestEnum.SomeMoreProcessing}">
+                            <Setter Property="Content"
+                                    Value="{lex:Loc ButtonCaptionOnMoreProcessing}" />
+                            <Setter Property="IsEnabled"
+                                    Value="False" />
+                        </DataTrigger>
+                    </Style.Triggers></Style>
+            </Button.Style>
+        </Button>
         <!--<TextBox Grid.Row="5" lex:ResxLocalizationProvider.DefaultAssembly="AssemblyTest" lex:ResxLocalizationProvider.DefaultDictionary="CountryRes">
             <TextBox.Text>
                 <Ext:CatExtension Format="Nested list test: {0} - {1}">
@@ -115,7 +149,7 @@
                 </Ext:CatExtension>
             </TextBox.Text>
         </TextBox>-->
-        <lex:EnumComboBox Grid.Row="6" Margin="2" PrependType="True" lex:LocalizeDictionary.Provider="{StaticResource ResourceKey=CSVProvider}" Type="{x:Type Local:TestEnum}">
+        <lex:EnumComboBox Grid.Row="7" Margin="2" PrependType="True" lex:LocalizeDictionary.Provider="{StaticResource ResourceKey=CSVProvider}" Type="{x:Type Local:TestEnum}">
             <!--<lex:EnumComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock><lex:EnumRun EnumValue="{Binding}" PrependType="{Binding PrependType, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=lex:EnumComboBox}}" /></TextBlock>
@@ -146,7 +180,7 @@
                 </MultiBinding>
             </TextBox.Text>
         </TextBox>-->
-        <TabControl Grid.Row="7" ItemsSource="{Binding Items}">
+        <TabControl Grid.Row="8" ItemsSource="{Binding Items}">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type TabItem}">
                     <StackPanel Orientation="Horizontal">
@@ -159,7 +193,7 @@
                 </DataTemplate>
             </TabControl.ItemTemplate>
         </TabControl>
-        <FlowDocumentScrollViewer Grid.Row="8">
+        <FlowDocumentScrollViewer Grid.Row="9">
             <FlowDocument>
                 <Paragraph>
                     <!--<Run Text="{lex:Loc ButtonDE}" />-->

@@ -18,3 +18,7 @@ Tab3;Baz
 TestEnum_Input;InputCSV
 TestEnum_Output;OutputCSV
 TestEnum_Processing;ProcessingCSV
+ButtonCaptionOnMoreProcessing;Some more Processing...
+ButtonCaptionOnProcessing;Processing...
+ButtonCaptionOnOutput;Output
+ButtonCaptionOnInput;Input

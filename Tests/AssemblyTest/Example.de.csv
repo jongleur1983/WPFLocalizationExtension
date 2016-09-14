@@ -17,3 +17,7 @@ Tab3;Tralala
 TestEnum_Input;EingabeCSV
 TestEnum_Output;AusgabeCSV
 TestEnum_Processing;VerarbeitungCSV
+ButtonCaptionOnMoreProcessing;Weitere Verarbeitung...
+ButtonCaptionOnProcessing;Verarbeitung...
+ButtonCaptionOnOutput;Ausgabe
+ButtonCaptionOnInput;Eingabe
